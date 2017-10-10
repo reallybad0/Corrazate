@@ -19,13 +19,17 @@ namespace Lode
 
             Console.WriteLine("LODĚ");
             Console.WriteLine("Vyberte typ hry: \n1. Proti počítači\n2. Proti dalšímu hráči");
-            int vyber = Convert.ToInt32(Console.ReadLine());
+            int vyber = DokudCislo();
             switch (vyber)
             {
                 case 1:
                     HracPocitac();
                     break;
                 case 2:
+                    HracHrac();
+                    break;
+                default:
+                    Console.WriteLine("Takovou možnost nemáme :( ");
                     break;
             }
         }
@@ -45,7 +49,7 @@ namespace Lode
 
             int[,] druhy = new int[10, 20];
 
-            
+
             string[] typylodi = new string[10];
             typylodi[0] = "Letadlová Loď - *****";
             typylodi[1] = "Křižník - ***";
@@ -104,7 +108,7 @@ namespace Lode
                     Console.Write("\n");
                 }
                 //K O N E C VÝPISU MAPY ________________________________________________________________
-                
+
                 bool zadano = true;
 
                 //Z A D Á V Á N Í ______________________________________________________________________
@@ -115,15 +119,15 @@ namespace Lode
                     int delkalode = delkylodi[typlodeID];
                     //------------------------------------------------
                     Console.Write("Zadejte číslo sloupce na kterém bude loď začínat 0-9: ");
-                    int Uy = Convert.ToInt32(Console.ReadLine());
+                    int Uy = DokudCislo();
                     //------------------------------------------------
                     Console.Write("Zadejte číslo řádku na kterém bude loď začínat 0-9 : ");
-                    int Ux = Convert.ToInt32(Console.ReadLine());
+                    int Ux = DokudCislo();
                     //!!!!ošetřit vstupy
 
                     //jakým směrem
                     Console.Write("Jakým směrem loď půjde?: 1 vodorovně _ 2 vertikálně:");
-                    int kam = Convert.ToInt32(Console.ReadLine());
+                    int kam = DokudCislo();
 
 
                     string pouzito = "N";
@@ -198,7 +202,7 @@ namespace Lode
                             Console.Clear();
                         }
                     }
-                    
+
 
                 }
             }
@@ -281,6 +285,7 @@ namespace Lode
                         int[] pocty = new int[] { 5, 3, 3, 2, 2, 1, 1, 1, 1 };
 
                         //POTOPENÍ CELÉ LODĚ :::::::::::::::::::::::::::::::::::::::::
+                        int celkem = 0;
                         for (int t = 0; t < 9; t++)
                         {
                             int zaz = 0;
@@ -306,6 +311,7 @@ namespace Lode
                             //Console.WriteLine("ZAZ JE " + zaz);
                             if (zaz == pocty[t])
                             {
+                                celkem = celkem + 1;
                                 int p = 0;
                                 for (int u = 0; u < pocty[t]; u++)
                                 {
@@ -315,6 +321,12 @@ namespace Lode
                                 }
                                 //přepsat " X " na " ° "
                                 //Console.WriteLine("ČUUUUUUUUUUUS");
+                            }
+                            if (celkem == 8)
+                            {
+                                Console.WriteLine("Konec hry! vyhrál Počítač!!");
+                                Console.ReadLine();
+                                won = true;
                             }
 
                         }
@@ -354,7 +366,7 @@ namespace Lode
                                     //minul
                                     Console.Write(" ! ");
                                 }
-                                else 
+                                else
                                 {
                                     Console.Write(" @ ");
                                 }
@@ -428,7 +440,7 @@ namespace Lode
                 //VYPSAT MAPU VÝSTŘELŮ UŽIVATELE
 
                 //VÝPIS MAPY_________________________________________________
-#region
+                #region
                 //VÝPIS PRVNÍHO ŘÁDKU
                 Console.Write(" ");
                 for (int l = 0; l < 10; l++)
@@ -465,28 +477,28 @@ namespace Lode
                     }
                     Console.Write("\n");
                 }
-#endregion
+                #endregion
                 //KONEC VÝPISU MAPY__________________________________________
                 //Console.ReadLine();
 
-       
+
                 Console.Write("\n\nKam Vystřelíte?\nŘádek: ");
-                int radek = Convert.ToInt32(Console.ReadLine());
+                int radek = DokudCislo();
                 Console.Write("\nSloupec: ");
-                int sloupec = Convert.ToInt32(Console.ReadLine());
+                int sloupec = DokudCislo();
                 hit = true;
                 //S T Ř E L B A 
                 while (hit)
                 {
                     //Console.Readline();
-                    if (vystrelenoUZI[radek,sloupec] == 0)
+                    if (vystrelenoUZI[radek, sloupec] == 0)
                     {
                         //pokud ještě nebylo stříleno na to místo
-                        vystrelenoUZI[radek,sloupec] = 1;
+                        vystrelenoUZI[radek, sloupec] = 1;
                         //IF ZÁSAH
-                        if (lodePC[radek,sloupec] == 1)
+                        if (lodePC[radek, sloupec] == 1)
                         {
-                            zasahyUZI[radek,sloupec] = 1;
+                            zasahyUZI[radek, sloupec] = 1;
                             //hit = false;
                         }
                         Console.Clear();
@@ -494,11 +506,12 @@ namespace Lode
 
                         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                         //ZAZ == 0 ?! 
-                        //FUNGUJE AŽ NA 0,0 , CO TO SAKRA JE
+                       
 
                         int[] pocty = new int[] { 5, 3, 3, 2, 2, 1, 1, 1, 1 };
 
                         //POTOPENÍ CELÉ LODĚ :::::::::::::::::::::::::::::::::::::::::
+                        int celkem = 0;
                         for (int t = 0; t < 9; t++)
                         {
                             int zaz = 0;
@@ -524,17 +537,23 @@ namespace Lode
                             //Console.WriteLine("ZAZ JE " + zaz);
                             if (zaz == pocty[t])
                             {
+                                celkem = celkem + 1;
                                 int p = 0;
                                 for (int u = 0; u < pocty[t]; u++)
                                 {
                                     int b = p + 1;
                                     zasahyUZI[druhy[t, p], druhy[t, b]] = 2;
                                     p = p + 2;
+                                    
                                 }
-                                //přepsat " X " na " ° "
-                                //Console.WriteLine("ČUUUUUUUUUUUS");
+                                //přepsat " X " na " ° 
                             }
-
+                            if(celkem == 8)
+                            {
+                                Console.WriteLine("Konec hry! vyhrál uživatel!");
+                                Console.ReadLine();
+                                won = true;
+                            }
                         }
                         //KONEC POTOPENÍ CELÉ LODI::::::::::::::::::::::::::::::::::::
 
@@ -613,6 +632,30 @@ namespace Lode
         static void HracHrac()
         {
             Console.WriteLine("Zvolili jste hru proti dalšímu hráči");
+        }
+
+
+        static int DokudCislo()
+        {
+            bool incislo = true;
+            int returnCislo = 0;
+            while (incislo)
+            {
+                string inputcisla = Console.ReadLine();
+                try
+                {
+                    int cisloparse = int.Parse(inputcisla);
+                    returnCislo = cisloparse;
+                    incislo = false;
+                }
+                catch (Exception e)
+                {
+                    Console.Write(" ! Nesprávný vstup !\n");
+                }
+            }
+            return returnCislo;
+
+
         }
     }
 }
