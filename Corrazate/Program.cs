@@ -18,6 +18,14 @@ namespace Lode
              */
 
             Console.WriteLine("LODĚ");
+            /*Legenda : 
+             X = Zásah lodě!
+            ! = potopená loď! 
+            @ = mimo
+             ~ = voda
+             
+             
+             */
             Console.WriteLine("Vyberte typ hry: \n1. Proti počítači\n2. Proti dalšímu hráči");
             int vyber = DokudCislo();
             switch (vyber)
@@ -40,6 +48,7 @@ namespace Lode
 
             // VYTVOŘENÍ POLE S LODĚMA HRÁČE 0 0 0 0 A PROMĚNNÝCH
             #region
+            Random rnd = new Random();
             // Lichý = sloupce, X, Sudý = řádky, Y
             int[,] lode = new int[10, 10];
             for (int x = 0; x < 10; x++) { for (int y = 0; y < 10; y++) { lode[x, y] = 0; } }
@@ -75,7 +84,9 @@ namespace Lode
 
             for (int m = 0; m < 8; m++)
             {
+                
                 //VÝPIS MAPY______________________________________________________________________
+                #region
                 //VÝPIS PRVNÍHO ŘÁDKU
                 Console.Write(" ");
                 for (int l = 0; l < 10; l++)
@@ -108,27 +119,25 @@ namespace Lode
                     Console.Write("\n");
                 }
                 //K O N E C VÝPISU MAPY ________________________________________________________________
+                #endregion
 
                 bool zadano = true;
-
+                
                 //Z A D Á V Á N Í ______________________________________________________________________
                 while (zadano)
                 {
-
+                    int kam = 0;
                     Console.WriteLine("Umisťujete loď typu:" + typylodi[typlodeID]);
                     int delkalode = delkylodi[typlodeID];
                     //------------------------------------------------
                     Console.Write("Zadejte číslo sloupce na kterém bude loď začínat 0-9: ");
                     int Uy = DokudCislo();
-                    //------------------------------------------------
+                                        //------------------------------------------------
                     Console.Write("Zadejte číslo řádku na kterém bude loď začínat 0-9 : ");
                     int Ux = DokudCislo();
-                    //!!!!ošetřit vstupy
-
                     //jakým směrem
                     Console.Write("Jakým směrem loď půjde?: 1 vodorovně _ 2 vertikálně:");
-                    int kam = DokudCislo();
-
+                    kam = DokudCislo();
 
                     string pouzito = "N";
                     if (kam == 1)
@@ -136,9 +145,21 @@ namespace Lode
                         //foreach ux uy podle pozic kde bude loď
                         for (int l = 0; l < delkalode; l++)
                         {
-                            if (lode[Ux, Uy + l] == 1)
+                            //je už tam obsazeno?
+                            try
                             {
-                                pouzito = "A";
+                                //lode[Ux, Uy + l] = 3;
+                                if (lode[Ux, Uy + l] == 1)
+                                {
+
+                                    pouzito = "A";
+                                }
+                            }
+                            catch (IndexOutOfRangeException ior)
+                            {
+                                //pokud je index mimo pole = > nejde to tam dát
+                                pouzito = "M";
+
                             }
                         }
 
@@ -146,6 +167,9 @@ namespace Lode
                         {
                             Console.WriteLine("Tuto pozici již máte obsazenou");
                             //Console.Clear();
+                        } else if (pouzito == "M")
+                        {
+                            Console.WriteLine("Loď zasahuje mimo hrací pole");
                         }
                         else
                         {
@@ -171,9 +195,20 @@ namespace Lode
                         //příp. dodělat if loď hned vedle jiný lodě
                         for (int l = 0; l < delkalode; l++)
                         {
-                            if (lode[Ux, Uy + l] == 1)
+                            try
                             {
-                                pouzito = "A";
+                                //lode[Ux, Uy + l] = 3;
+                                if (lode[Ux, Uy + l] == 1)
+                                {
+
+                                    pouzito = "A";
+                                }
+                            }
+                            catch (IndexOutOfRangeException ior)
+                            {
+                                //pokud je index mimo pole = > nejde to tam dát
+                                pouzito = "M";
+
                             }
                         }
 
@@ -202,7 +237,10 @@ namespace Lode
                             Console.Clear();
                         }
                     }
-
+                    /*else if (kam == 3)
+                    {
+                        Console.WriteLine("Vložena špatná hodnota");
+                    }*/
 
                 }
             }
@@ -211,13 +249,190 @@ namespace Lode
             #endregion
             //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-            //________________________________________________________________________________________
-            //ZADÁNÍ POČÍTAČOVÝCH LODÍ________________________________________________________________
+            //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+            //ZADÁNÍ POČÍTAČOVÝCH LODÍ
             //
+            #region
+            int[,] druhyPC = new int[10, 20];
+            int TLID = 0;
+            //bool PCZ = true;
+            for (int m = 0; m < 8; m++)
+            {
+                bool PCZ = true;
+                while (PCZ)
+                {
+
+                    //Console.WriteLine("Umisťujete loď typu:" + typylodi[typlodeID]);
+                    int delkalode = delkylodi[TLID];
+                    //Console.Write(delkalode);
+                    //Console.ReadLine();
+                    //------------------------------------------------
+                    //Console.Write("Zadejte číslo sloupce na kterém bude loď začínat 0-9: ");
+                    int Uy = rnd.Next(9);
+                    //Console.Write(Uy);
+                    //Console.ReadLine();
+                    //RANDINT
+                    //------------------------------------------------
+                    //Console.Write("Zadejte číslo řádku na kterém bude loď začínat 0-9 : ");
+                    int Ux = rnd.Next(9);
+                    //Console.Write(Ux);
+                    //Console.ReadLine();
+                    //RANDINT
+
+
+                    //rnd.Next(9);
+                    //jakým směrem
+                    //Console.Write("Jakým směrem loď půjde?: 1 vodorovně _ 2 vertikálně:");
+                    int kam = rnd.Next(0, 2);
+                    string pouzito = "N";
+                    if (kam == 0)
+                    {
+                        //foreach ux uy podle pozic kde bude loď
+                        for (int l = 0; l < delkalode; l++)
+                        {
+                            //je už tam obsazeno?
+                            try
+                            {
+                                //lode[Ux, Uy + l] = 3;
+                                if (lodePC[Ux, Uy + l] == 1)
+                                {
+                                    pouzito = "A";
+                                }
+                            }
+                            catch (IndexOutOfRangeException ior)
+                            {
+                                //pokud je index mimo pole = > nejde to tam dát
+                                pouzito = "M";
+
+                            }
+                        }
+
+                        if (pouzito == "A")
+                        {
+                            //Console.WriteLine("Tuto pozici již máte obsazenou");
+                            //Console.Clear();
+                        }
+                        else if (pouzito == "M")
+                        {
+                            //Console.WriteLine("Loď zasahuje mimo hrací pole");
+                        }
+                        else
+                        {
+                            //zadání :: 
+                            int ctr = 0;
+                            for (int l = 0; l < delkalode; l++)
+                            {
+                                lodePC[Ux, Uy + l] = 1;
+                                druhyPC[typlodeID, ctr] = Ux;
+                                ctr = ctr + 1;
+                                druhyPC[typlodeID, ctr] = Uy + l;
+                                ctr = ctr + 1;
+                            }
+                            // Console.WriteLine("První souřadnice lodě s ID 0 jsou:" + druhy[0, 0] + druhy[0, 1]);
+
+                            TLID = TLID + 1;
+                            PCZ = false;
+                            Console.Clear();
+                        }
+                    }
+                    else if (kam == 1)
+                    {
+                        //příp. dodělat if loď hned vedle jiný lodě
+                        for (int l = 0; l < delkalode; l++)
+                        {
+                            try
+                            {
+                                //lode[Ux, Uy + l] = 3;
+                                if (lodePC[Ux, Uy + l] == 1)
+                                {
+
+                                    pouzito = "A";
+                                }
+                            }
+                            catch (IndexOutOfRangeException ior)
+                            {
+                                //pokud je index mimo pole = > nejde to tam dát
+                                pouzito = "M";
+
+                            }
+                        }
+
+                        if (pouzito == "A")
+                        {
+                           //Console.WriteLine("Tuto pozici již máte obsazenou");
+                            //Console.Clear();
+                        }
+                        else if (pouzito == "M")
+                        {//znova
+                        }
+                        else
+                        {
+                            //Zadání lodě
+                            //if(lode Ux+1,Uy == plná => nejde to) try? 
+                            int ctr = 0;
+                            for (int l = 0; l < delkalode; l++)
+                            {
+                                lodePC[Ux + l, Uy] = 1;
+                                druhyPC[typlodeID, ctr] = Ux + l;
+                                ctr = ctr + 1;
+                                druhyPC[typlodeID, ctr] = Uy;
+                                ctr = ctr + 1;
+                            }
+                            //                            Console.WriteLine("První souřadnice lodě s ID 0 jsou:" + druhy[0, 0] + druhy[0, 1]);
+
+                            TLID = TLID + 1;
+                            PCZ = false;
+                            Console.Clear();
+                        }
+                    }
+
+
+                }
+            }
+            #endregion
+
+#region
             /*
-             
-             */
-            //KONEC ZADÁNÍ POČÍTAČOVÝCH LODÍ__________________________________________________________
+            
+            //VÝPIS MAPY______________________________________________________________________
+            //VÝPIS PRVNÍHO ŘÁDKU
+            Console.WriteLine("Lodě Počítače :) ");
+            Console.Write(" ");
+            for (int l = 0; l < 10; l++)
+            {
+                Console.Write(" " + l + " ");
+            }
+            Console.Write("\n");
+
+
+            //VÝPIS MAPY
+            for (int r = 0; r < 10; r++)
+            {
+                Console.Write(r);
+                for (int s = 0; s < 10; s++)
+                {
+                    //Console.Write(r);
+                    if (lodePC[r, s] == 0)
+                    {
+                        Console.Write(" ~ ");
+                    }
+                    else
+                    {
+
+                        Console.Write(" @ ");
+
+                    }
+                    //Console.Write(lode[r, n]);
+
+                }
+                Console.Write("\n");
+            }
+            Console.ReadLine();
+            //K O N E C VÝPISU MAPY ________________________________________________________________
+            
+    */
+#endregion   
+            //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
             //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
             //proměnné
@@ -251,7 +466,7 @@ namespace Lode
                     zasahyUZI[x, y] = 0;
                 }
             }
-            Random rnd = new Random();
+            //Random rnd = new Random();
             #endregion
 
             //je dohráno??
@@ -263,8 +478,9 @@ namespace Lode
                 //A U T O  S T Ř Í L E N Í  P O Č Í T A Č E::::::::::::::::::::::::::::::::::::::::::::::
                 while (hit)
                 {
-                    int Rx = rnd.Next(10);
-                    int Ry = rnd.Next(10);
+
+                    int Rx = rnd.Next(9);
+                    int Ry = rnd.Next(9);
                     //Console.Readline();
                     if (vystreleno[Rx, Ry] == 0)
                     {
@@ -281,7 +497,7 @@ namespace Lode
 
                         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                         //ZAZ == 0 ?! 
-                        //FUNGUJE AŽ NA 0,0 , CO TO SAKRA JE
+                       
                         int[] pocty = new int[] { 5, 3, 3, 2, 2, 1, 1, 1, 1 };
 
                         //POTOPENÍ CELÉ LODĚ :::::::::::::::::::::::::::::::::::::::::
@@ -320,7 +536,7 @@ namespace Lode
                                     p = p + 2;
                                 }
                                 //přepsat " X " na " ° "
-                                //Console.WriteLine("ČUUUUUUUUUUUS");
+                                
                             }
                             if (celkem == 8)
                             {
@@ -390,44 +606,42 @@ namespace Lode
                 }
                 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-                // S T Ř Í L E N Í  U Ž I V A T E L E :::::::::::::::::::::::::::::::::::::::::::::::::::
-
-                //ROZMÍSTĚNÍ LODÍ UŽIVATELE
+                // S T Ř Í L E N Í  U Ž I V A T E L E :::::::::::::::::::::::::::::::::::::::::::::::::::               
+                Console.Write("LEGENDA : \nX = Zásah lodě!\n! = Potopená loď!\n@ = Zásah mimo\n~ = Voda\n");         
                 Console.Write("\n\n\n VAŠE LODĚ \n");
                 #region
-
                 //VÝPIS MAPY______________________________________________________________________
-                //VÝPIS PRVNÍHO ŘÁDKU
-                Console.Write(" ");
-                for (int l = 0; l < 10; l++)
-                {
-                    Console.Write(" " + l + " ");
-                }
-                Console.Write("\n");
-
-
-                //VÝPIS MAPY
-                for (int r = 0; r < 10; r++)
-                {
-                    Console.Write(r);
-                    for (int s = 0; s < 10; s++)
+                    //VÝPIS PRVNÍHO ŘÁDKU
+                    Console.Write(" ");
+                    for (int l = 0; l < 10; l++)
                     {
-                        //Console.Write(r);
-                        if (lode[r, s] == 0)
-                        {
-                            Console.Write(" ~ ");
-                        }
-                        else
-                        {
-
-                            Console.Write(" O ");
-
-                        }
-                        //Console.Write(lode[r, n]);
-
+                        Console.Write(" " + l + " ");
                     }
                     Console.Write("\n");
-                }
+
+
+                    //VÝPIS CELK. MAPY
+                    for (int r = 0; r < 10; r++)
+                    {
+                        Console.Write(r);
+                        for (int s = 0; s < 10; s++)
+                        {
+                            //Console.Write(r);
+                            if (lode[r, s] == 0)
+                            {
+                                Console.Write(" ~ ");
+                            }
+                            else
+                            {
+
+                                Console.Write(" O ");
+
+                            }
+                            //Console.Write(lode[r, n]);
+
+                        }
+                        Console.Write("\n");
+                    }
                 //K O N E C VÝPISU MAPY ________________________________________________________________
 
 
@@ -436,7 +650,7 @@ namespace Lode
                 Console.Write("(Enter)");
                 Console.ReadLine();
                 Console.Clear();
-
+               
                 //VYPSAT MAPU VÝSTŘELŮ UŽIVATELE
 
                 //VÝPIS MAPY_________________________________________________
@@ -503,10 +717,10 @@ namespace Lode
                         }
                         Console.Clear();
                         Console.WriteLine("Střílíte na pozice X:" + radek + " a Y:" + sloupec);
-
+                        Console.Write("LEGENDA : \nX = Zásah lodě!\n! = Potopená loď!\n@ = Zásah mimo\n~ = Voda\n");
                         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                         //ZAZ == 0 ?! 
-                       
+
 
                         int[] pocty = new int[] { 5, 3, 3, 2, 2, 1, 1, 1, 1 };
 
@@ -521,12 +735,12 @@ namespace Lode
                             {
                                 //t = id lode
                                 int b = y + 1;
-                                if (zasahyUZI[druhy[t, y], druhy[t, b]] == 1)
+                                if (zasahyUZI[druhyPC[t, y], druhyPC[t, b]] == 1)
                                 {
                                     //něco zasaženýho
                                     zaz = zaz + 1;
                                 }
-                                else if (zasahyUZI[druhy[t, y], druhy[t, b]] == 0)
+                                else if (zasahyUZI[druhyPC[t, y], druhyPC[t, b]] == 0)
                                 {
                                     //zaz = zaz - 1;
                                     // ! nevyjde to 
@@ -542,7 +756,7 @@ namespace Lode
                                 for (int u = 0; u < pocty[t]; u++)
                                 {
                                     int b = p + 1;
-                                    zasahyUZI[druhy[t, p], druhy[t, b]] = 2;
+                                    zasahyUZI[druhyPC[t, p], druhyPC[t, b]] = 2;
                                     p = p + 2;
                                     
                                 }
@@ -632,6 +846,9 @@ namespace Lode
         static void HracHrac()
         {
             Console.WriteLine("Zvolili jste hru proti dalšímu hráči");
+
+
+
         }
 
 
